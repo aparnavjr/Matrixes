@@ -1,0 +1,101 @@
+public class Solution {
+    
+    static int row = 0; static int col = 0;
+    
+    public void SolveSudoku(char[,] board)
+    {
+        
+        solver(ref board);
+        
+    }
+    
+    public bool solver(ref char[,] board) {
+        
+        row = board.GetLength(0);
+        col = board.GetLength(1);
+        
+        int r = 0;int c =0;
+        if(UnAssigned(board,ref r, ref c) == false)
+            return true;
+            
+        for(char num = '1'; num <= '9'; num++)
+        {
+            if(IsSafe(board,r,c,num))
+            {
+                
+                board[r,c] = num;
+                
+                if(solver(ref board))
+                    return true;
+                    
+                board[r,c] = '.';
+                
+            }
+        
+            
+        }
+        
+        
+        return false;
+    }
+    
+    public static bool IsSafe(char[,] board, int i, int j, char num)
+    {
+        
+        if(UsedRow(board,i,num) == false && UsedCol(board,j,num) == false && Usedbox((i-i%3),(j-j%3),board, num) == false)
+            return true;
+        return false;
+        
+    }
+    
+    public static bool UsedRow(char[,] board, int r, char num)
+    {
+        
+        for(int i = 0; i < col ;i ++)
+        {
+            if(board[r,i] == num)
+                return true;
+        }
+        
+        return false;
+        
+    }
+    
+    public static bool UsedCol(char[,] board, int c, char num)
+    {
+        
+        for(int i = 0; i < row ;i ++)
+        {
+            if(board[i,c] == num)
+                return true;
+        }
+        
+        return false;
+        
+    }
+    
+    public static bool Usedbox(int boxStartRow, int boxStartCol, char[,] grid, char num)
+    {
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                if (grid[i+boxStartRow,j+boxStartCol] == num)
+                    return true;
+        return false;
+    }
+    
+    public static bool UnAssigned(char[,] board, ref int r, ref int c)
+    {
+        for(int i =0 ; i < row; i++)
+            for(int j =0 ; j< col;j++)
+            {
+                if(board[i,j] == '.')
+                {
+                    r = i;
+                    c = j;
+                    return true;
+                }
+            }
+            
+        return false;
+    }
+}
