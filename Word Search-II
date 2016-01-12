@@ -1,0 +1,68 @@
+public class Solution {
+    public IList<string> FindWords(char[,] board, string[] words) {
+        
+        List<string> results = new List<string>();
+        
+        if(board.Length == 0 || words.Length == 0)
+            return results;
+        
+        foreach(string word in words)
+        {
+            if(helper(board,word))
+            {
+                results.Add(word);
+            }
+        }
+        
+        return results;
+    }
+    
+    public bool helper(char[,] board, string word)
+    {
+        int row = board.GetLength(0);
+        
+        int col = board.GetLength(1);
+        
+        bool[,] visited = new bool[row,col];
+        
+        for(int i= 0; i < row;i++)
+        {
+             for(int j =0; j < col;j++)
+             {
+                 if(dfs(board,word,i,j,visited,0,row,col))
+                    return true;
+             }
+        }
+         
+         return false;
+    }
+    
+    public bool IsSafe(char[,] board, int i, int j, bool[,] visited,int row,int col,string word,int start)
+    {
+        if (i < 0 || i>= row || j <0 || j >= col || visited[i,j] == true || board[i,j] != word[start])
+            return false;
+        return true;
+    }
+    
+    public bool dfs(char[,] board, string word,int i,int j, bool[,] visited,int start,int row,int col)
+    {
+        if(word.Length == start )
+            return true;
+        
+        int [] rowa = new int[] {-1,1,0,0};
+        int [] cola = new int[] {0,0,-1,1};
+        
+        visited[i,j] = true;
+        
+        for(int k =0 ; k < 4 ;k ++)
+        {
+            if(IsSafe(board,i+rowa[k],j+cola[k],visited,row,col,word,start))
+              if(dfs(board, word, i+rowa[k],j+cola[k],visited,start+1,row,col))
+                return true;
+        }
+        
+        visited[i,j] = false;
+        return false;
+       
+    }
+}
